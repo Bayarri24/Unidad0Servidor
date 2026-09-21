@@ -10,29 +10,29 @@ package com.mycompany.Laboral;
  */
 public class Persona {
 
-    //Atributos
+    /**Atributos*/
     public String nombre, dni;
     public char sexo;
 
-    //Constructor 1
+    /**Constructor 1*/
     public Persona(String nombre, String dni, char sexo) {
         this.nombre = nombre;
         this.dni = dni;
         this.sexo = sexo;
     }
 
-    //Constructor 2
+    /**Constructor 2*/
     public Persona(String nombre, char sexo) {
         this.nombre = nombre;
         this.sexo = sexo;
     }
 
-    //SetDni
+    /**SetDni*/
     public void setDni(String dni) {
         this.dni = dni;
     }
 
-    //Imprime
+    /**Imprime*/
     public String imprimePersona() {
         return "Persona{" + "nombre=" + nombre + ", dni=" + dni + '}';
     }

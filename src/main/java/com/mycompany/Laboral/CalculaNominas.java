@@ -26,18 +26,18 @@ public class CalculaNominas {
     
     public static void main(String[] args) throws DatosNoCorrectosException {
 
-        //Creacion de objetos
+        /**Creacion de objetos**/
         Empleado e1 = new Empleado(4, 7, "James Cosling", "32000032G", 'M');
         Empleado e2 = new Empleado("Ada Lovelace", "32000031R", 'F');
         CalculaNominas nn = new CalculaNominas();
 
-        //Imprimimos mediante escribe
+        /**Imprimimos mediante escribe**/
         nn.escribe(e1, e2);
-        //Incremento de los años trabajados y cambio de categoria a 9
+        /**Incremento de los años trabajados y cambio de categoria a 9**/
         e2.incrAnyo();
         e2.setCategoria(9);
 
-        //Imprimimos los empleados y su sueldo
+        /**Imprimimos los empleados y su sueldo*/
         nn.escribe(e1, e2);
         
     }

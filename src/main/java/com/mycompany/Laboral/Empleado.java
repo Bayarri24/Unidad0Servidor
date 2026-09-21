@@ -10,7 +10,7 @@ public class Empleado extends Persona {
     public Empleado(int categoria, int anyosTrabajados, String nombre, String dni, char sexo) throws DatosNoCorrectosException {
         super(nombre, dni, sexo);
 
-        //Imponemos la condicion 
+        /**Imponemos la condicion */
         if (categoria < 1 || categoria > 10 || anyosTrabajados < 0) {
             throw new DatosNoCorrectosException();
         }
