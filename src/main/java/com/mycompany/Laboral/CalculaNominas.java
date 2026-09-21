@@ -11,7 +11,8 @@ import com.mycompany.Laboral.Exceptions.DatosNoCorrectosException;
  * @author usuario26
  */
 public class CalculaNominas {
-    
+
+    //Objeto nomina
     Nomina n = new Nomina();
     
     private void escribe(Empleado e1, Empleado e2) {
