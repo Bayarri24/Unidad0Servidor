@@ -47,6 +47,7 @@ public class CalculaNominas {
         //Llamamos a la función y leemos el txt
         leerTxt("empleados.txt");
 
+        actualizarTxt();
     }
 
     /**
@@ -75,7 +76,7 @@ public class CalculaNominas {
         try {
             FileWriter fw = new FileWriter("empleados.txt");
             fw.write("categoría: 4,años trabajados: 9, nombre: James Cosling, dni: 32000032G, sexo:´M´\n");
-            fw.close();  // must close manually
+            fw.close();  // Se debe cerrar el FileWriter para que los cambios se guarden correctamente
             System.out.println("Documento actualizado");
         } catch (IOException e) {
             throw new RuntimeException(e);
