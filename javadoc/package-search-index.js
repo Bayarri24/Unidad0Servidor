@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"com.mycompany.Laboral"},{"l":"com.mycompany.Laboral.DAO"},{"l":"com.mycompany.Laboral.Exceptions"},{"l":"DBUtils"}];updateSearchResults();
