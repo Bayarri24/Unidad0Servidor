@@ -1,0 +1,5 @@
+32000033A, Jose Rodriguez, M, 10, 15
+32000034B, Marta Vázquez, F, 8, 12
+32000035C, Luis Garrido, M, 5, 4
+32000036D, Manuel García, M, 9, 20
+32000037E, Andrea Fernández, F, 7, 8
