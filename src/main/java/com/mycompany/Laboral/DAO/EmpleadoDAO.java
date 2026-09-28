@@ -145,4 +145,155 @@ public class EmpleadoDAO {
 
     }
 
+    /**
+     * métodos del apartado 5
+     *
+     */
+
+    // 5.1. Mostrar información de todos los empleados
+    public void mostrarEmpleados() throws SQLException {
+        String sql = "SELECT nombre, dni, sexo, categoria, anyos FROM Empleados";
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            System.out.println("\n--- LISTADO DE EMPLEADOS ---");
+            while (rs.next()) {
+                System.out.println("DNI: " + rs.getString("dni") +
+                        " | Nombre: " + rs.getString("nombre") +
+                        " | Sexo: " + rs.getString("sexo") +
+                        " | Categoría: " + rs.getInt("categoria") +
+                        " | Años: " + rs.getInt("anyos"));
+            }
+        }
+    }
+
+    // 5.2. Mostrar salario de un empleado por DNI
+    public void mostrarSalarioEmpleado(String dni) throws SQLException {
+        String sql = "SELECT sueldo FROM Nominas WHERE dni = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, dni);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println("El salario del empleado con DNI " + dni + " es: " + rs.getInt("sueldo") + "€");
+                } else {
+                    System.out.println("No se encontró ningún empleado con el DNI: " + dni);
+                }
+            }
+        }
+    }
+
+    // 5.3. Modificar datos de un empleado (actualiza sueldo automáticamente)
+    public void modificarEmpleado(Empleado e) throws SQLException {
+        int nuevoSueldo = Nomina.sueldo(e);
+        String sqlEmp = "UPDATE Empleados SET nombre = ?, sexo = ?, categoria = ?, anyos = ? WHERE dni = ?";
+        String sqlNom = "UPDATE Nominas SET sueldo = ? WHERE dni = ?";
+
+        boolean autoCommitOriginal = conn.getAutoCommit();
+        try {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement psEmp = conn.prepareStatement(sqlEmp)) {
+                psEmp.setString(1, e.nombre);
+                psEmp.setString(2, String.valueOf(e.sexo));
+                psEmp.setInt(3, e.getCategoria());
+                psEmp.setInt(4, e.anyosTrabajados);
+                psEmp.setString(5, e.dni);
+                psEmp.executeUpdate();
+            }
+
+            try (PreparedStatement psNom = conn.prepareStatement(sqlNom)) {
+                psNom.setInt(1, nuevoSueldo);
+                psNom.setString(2, e.dni);
+                psNom.executeUpdate();
+            }
+
+            conn.commit();
+            System.out.println("Empleado y sueldo actualizado correctamente.");
+        } catch (SQLException ex) {
+            conn.rollback();
+            throw ex;
+        } finally {
+            conn.setAutoCommit(autoCommitOriginal);
+        }
+    }
+
+    // 5.4. Recalcular y actualizar el sueldo de un empleado por su DNI
+    public void recalcularSueldoEmpleado(String dni) throws SQLException, DatosNoCorrectosException {
+        String sqlSelect = "SELECT nombre, sexo, categoria, anyos FROM Empleados WHERE dni = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sqlSelect)) {
+            ps.setString(1, dni);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Empleado e = new Empleado(
+                            rs.getInt("categoria"),
+                            rs.getInt("anyos"),
+                            rs.getString("nombre"),
+                            dni,
+                            rs.getString("sexo").charAt(0)
+                    );
+                    int sueldoNuevo = Nomina.sueldo(e);
+
+                    String sqlUpdate = "UPDATE Nominas SET sueldo = ? WHERE dni = ?";
+                    try (PreparedStatement psUp = conn.prepareStatement(sqlUpdate)) {
+                        psUp.setInt(1, sueldoNuevo);
+                        psUp.setString(2, dni);
+                        psUp.executeUpdate();
+                    }
+                    System.out.println("Sueldo recalculado y actualizado a: " + sueldoNuevo + "€");
+                } else {
+                    System.out.println("Empleado no encontrado.");
+                }
+            }
+        }
+    }
+
+    // 5.5. Recalcular y actualizar sueldos de TODOS los empleados
+    public void recalcularTodosLosSueldos() throws SQLException, DatosNoCorrectosException {
+        String sql = "SELECT dni, categoria, anyos, nombre, sexo FROM Empleados";
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Empleado e = new Empleado(
+                        rs.getInt("categoria"),
+                        rs.getInt("anyos"),
+                        rs.getString("nombre"),
+                        rs.getString("dni"),
+                        rs.getString("sexo").charAt(0)
+                );
+                int nuevoSueldo = Nomina.sueldo(e);
+
+                String sqlUpdate = "UPDATE Nominas SET sueldo = ? WHERE dni = ?";
+                try (PreparedStatement psUp = conn.prepareStatement(sqlUpdate)) {
+                    psUp.setInt(1, nuevoSueldo);
+                    psUp.setString(2, e.dni);
+                    psUp.executeUpdate();
+                }
+            }
+            System.out.println("Se han recalculado todos los sueldos correctamente.");
+        }
+    }
+
+    // 5.6. Realizar copia de seguridad completa de la BD a ficheros
+    public void realizarBackupCompleto() throws SQLException {
+        String sql = "SELECT e.categoria, e.anyos, e.nombre, e.dni, e.sexo, n.sueldo " +
+                "FROM Empleados e JOIN Nominas n ON e.dni = n.dni";
+
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql);
+             PrintWriter pw = new PrintWriter(new FileWriter("empleados.txt", false))) { // Sobrescribe el backup previo
+
+            while (rs.next()) {
+                String linea = rs.getInt("categoria") + "," +
+                        rs.getInt("anyos") + "," +
+                        rs.getString("nombre") + "," +
+                        rs.getString("dni") + "," +
+                        rs.getString("sexo");
+                pw.println(linea);
+            }
+            System.out.println("Copia de seguridad en 'empleados.txt' realizada con éxito.");
+        } catch (IOException ex) {
+            System.out.println("Error al escribir el backup: " + ex.getMessage());
+        }
+    }
 }
