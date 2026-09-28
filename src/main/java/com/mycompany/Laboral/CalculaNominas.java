@@ -59,25 +59,24 @@ public class CalculaNominas {
 
 
         // Apertura de la conexión a la base de datos y ejecutar el menú interactivo
-
         try {
-            // 1. Abrimos conexión mediante DBUtils
+            // Abrimos conexión mediante DBUtils
             conn = DBUtils.getConnection();
             System.out.println("\nConexión a la base de datos establecida correctamente.");
 
-            // 2. Instanciamos el DAO pasándole la conexión activa
             EmpleadoDAO dao = new EmpleadoDAO(conn);
+
 
             int opcion = 0;
 
-            // 3. Menú interactivo (Punto 5 del examen)
+            //  Menú interactivo
             do {
-                System.out.println("\n================ MENÚ DE OPCIONES ================");
-                System.out.println("1. Mostrar información de todos los empleados (BD)");
-                System.out.println("2. Mostrar salario de un empleado por DNI (BD)");
-                System.out.println("3. Modificar datos de un empleado (BD)");
-                System.out.println("4. Recalcular y actualizar sueldo de un empleado (BD)");
-                System.out.println("5. Recalcular y actualizar todos los sueldos (BD)");
+                System.out.println("MENÚ DE OPCIONES");
+                System.out.println("1. Mostrar información de todos los empleados");
+                System.out.println("2. Mostrar salario de un empleado por DNI");
+                System.out.println("3. Modificar datos de un empleado");
+                System.out.println("4. Recalcular y actualizar sueldo de un empleado");
+                System.out.println("5. Recalcular y actualizar todos los sueldos ");
                 System.out.println("6. Realizar copia de seguridad de la BD a ficheros");
                 System.out.println("7. Alta individual de empleado en BD");
                 System.out.println("8. Alta masiva de empleados desde fichero .txt a BD");
@@ -85,7 +84,7 @@ public class CalculaNominas {
                 System.out.print("Seleccione una opción: ");
 
                 try {
-                    opcion = Integer.parseInt(sc.nextLine());
+                    opcion = sc.nextInt();
 
                     switch (opcion) {
                         case 1:
@@ -111,7 +110,6 @@ public class CalculaNominas {
                             dao.realizarBackupCompleto();
                             break;
                         case 7:
-                            // Ejemplo: Dar de alta al empleado 'e1' en la BD
                             dao.altaEmpleado(e1);
                             break;
                         case 8:
@@ -149,7 +147,7 @@ public class CalculaNominas {
     }
 
     /**
-     * NUEVO: Método auxiliar para el submenú de modificación de empleados (Punto 5.3)
+     * Método para el submenú de modificación de empleados
      */
     private static void menuModificarEmpleado(Scanner sc, EmpleadoDAO dao) {
         try {
@@ -168,10 +166,9 @@ public class CalculaNominas {
             System.out.print("Nuevos Años Trabajados: ");
             int anyos = Integer.parseInt(sc.nextLine());
 
-            // Se crea el objeto con los datos introducidos
             Empleado empModificado = new Empleado(categoria, anyos, nombre, dni, sexo);
 
-            // Se actualiza en la BD (recalculando el sueldo automáticamente)
+            // Se actualiza en la BD
             dao.modificarEmpleado(empModificado);
 
         } catch (DatosNoCorrectosException e) {
