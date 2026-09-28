@@ -11,7 +11,12 @@ package com.mycompany.Laboral.Exceptions;
 public class DatosNoCorrectosException extends Exception {
 
     public DatosNoCorrectosException() {
-        super();
+
+        super("Datos no correctos");
+    }
+
+    public DatosNoCorrectosException(String mensaje) {
+        super(mensaje);
     }
 
 }

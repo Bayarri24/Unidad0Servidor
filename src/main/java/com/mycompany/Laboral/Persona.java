@@ -33,8 +33,9 @@ public class Persona {
     }
 
     /**Imprime*/
-    public String imprimePersona() {
-        return "Persona{" + "nombre=" + nombre + ", dni=" + dni + '}';
+    public void imprimePersona() {
+
+        System.out.println("Persona{" + "nombre=" + nombre + ", dni=" + dni + '}');
     }
 
 }

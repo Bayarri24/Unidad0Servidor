@@ -7,6 +7,8 @@ package com.mycompany.Laboral;
 import com.mycompany.Laboral.Exceptions.DatosNoCorrectosException;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 /**
  *
@@ -33,6 +35,7 @@ public class CalculaNominas {
         Empleado e1 = new Empleado(4, 7, "James Cosling", "32000032G", 'M');
         Empleado e2 = new Empleado("Ada Lovelace", "32000031R", 'F');
         CalculaNominas nn = new CalculaNominas();
+        Connection conn = null;
 
         /**Imprimimos mediante escribe**/
         nn.escribe(e1, e2);
@@ -47,7 +50,12 @@ public class CalculaNominas {
         //Llamamos a la función y leemos el txt
         leerTxt("empleados.txt");
 
+        //Actualizamos el txt con un nuevo empleado y lo leemos de nuevo
         actualizarTxt();
+
+
+
+
     }
 
     /**

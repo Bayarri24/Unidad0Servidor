@@ -1,1 +1,2 @@
-categoría: 4,años trabajados: 9, nombre: James Cosling, dni: 32000032G, sexo:´M´
+32000032G;James Cosling;M;9;7
+32000031R;Ada Lovelace;F;1;1

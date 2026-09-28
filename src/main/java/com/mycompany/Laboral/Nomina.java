@@ -14,9 +14,8 @@ public class Nomina {
 
     
     /**Aplicamos forumla para obtener el sueldo*/
-    public int sueldo(Empleado e) {
-        int sueldoTotal;
-        return sueldoTotal = SUELDO_BASE[e.getCategoria()] + 5000 * e.anyosTrabajados;
+    public static int sueldo(Empleado e) {
+        return SUELDO_BASE[e.getCategoria() - 1] + 5000 * e.anyosTrabajados;
     }
 
 }

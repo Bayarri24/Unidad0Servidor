@@ -18,7 +18,7 @@ public class Empleado extends Persona {
         this.anyosTrabajados = anyosTrabajados;
     }
 
-    public Empleado(String nombre, String dni, char sexo) throws DatosNoCorrectosException {
+    public Empleado(String nombre, String dni, char sexo)  {
         super(nombre, dni, sexo);
         categoria = 1;
         anyosTrabajados = 0;
@@ -28,7 +28,15 @@ public class Empleado extends Persona {
         return categoria;
     }
 
-    public void setCategoria(int categoria) {
+    /**
+     * Validamos que la categoria este entre 1 y 10,
+     * si no lo esta lanzamos una excepcion
+     *
+     * */
+    public void setCategoria(int categoria)  throws DatosNoCorrectosException {
+        if (categoria < 1 || categoria > 10) {
+            throw new DatosNoCorrectosException("La categoría tiene que estar entre 1 y 10");
+        }
         this.categoria = categoria;
     }
 
