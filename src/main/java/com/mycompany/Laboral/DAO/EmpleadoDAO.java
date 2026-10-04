@@ -1,10 +1,12 @@
 package com.mycompany.Laboral.DAO;
+
 import com.mycompany.Laboral.Empleado;
 import com.mycompany.Laboral.Nomina;
 import com.mycompany.Laboral.Exceptions.DatosNoCorrectosException;
 
 import java.io.*;
 import java.sql.*;
+
 public class EmpleadoDAO {
     Connection conn;
 
@@ -93,11 +95,12 @@ public class EmpleadoDAO {
                 String[] datos = linea.split(",");
 
                 if (datos.length == 5) {
-                    String dni = datos[0].trim();
-                    String nombre = datos[1].trim();
-                    char sexo = datos[2].trim().charAt(0);
-                    int categoria = Integer.parseInt(datos[3].trim());
-                    int anyosTrabajados = Integer.parseInt(datos[4].trim());
+                    int categoria = Integer.parseInt(datos[0].trim());
+                    int anyosTrabajados = Integer.parseInt(datos[1].trim());
+                    String nombre = datos[2].trim();
+                    String dni = datos[3].trim();
+                    char sexo = datos[4].trim().charAt(0);
+
 
                     try {
                         /**
@@ -147,7 +150,7 @@ public class EmpleadoDAO {
 
     /**
      * métodos del apartado 5
-     *
+     * ke
      */
 
     // 5.1. Mostrar información de todos los empleados
@@ -224,22 +227,27 @@ public class EmpleadoDAO {
             ps.setString(1, dni);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Empleado e = new Empleado(
-                            rs.getInt("categoria"),
-                            rs.getInt("anyos"),
-                            rs.getString("nombre"),
-                            dni,
-                            rs.getString("sexo").charAt(0)
-                    );
-                    int sueldoNuevo = Nomina.sueldo(e);
+                    try {
 
-                    String sqlUpdate = "UPDATE Nominas SET sueldo = ? WHERE dni = ?";
-                    try (PreparedStatement psUp = conn.prepareStatement(sqlUpdate)) {
-                        psUp.setInt(1, sueldoNuevo);
-                        psUp.setString(2, dni);
-                        psUp.executeUpdate();
+                        Empleado e = new Empleado(
+                                rs.getInt("categoria"),
+                                rs.getInt("anyos"),
+                                rs.getString("nombre"),
+                                dni,
+                                rs.getString("sexo").charAt(0)
+                        );
+                        int sueldoNuevo = Nomina.sueldo(e);
+
+                        String sqlUpdate = "UPDATE Nominas SET sueldo = ? WHERE dni = ?";
+                        try (PreparedStatement psUp = conn.prepareStatement(sqlUpdate)) {
+                            psUp.setInt(1, sueldoNuevo);
+                            psUp.setString(2, dni);
+                            psUp.executeUpdate();
+                        }
+                        System.out.println("Sueldo recalculado y actualizado a: " + sueldoNuevo + "€");
+                    } catch (DatosNoCorrectosException ex) {
+                        System.out.println("Error en los datos del empleado en BD: " + ex.getMessage());
                     }
-                    System.out.println("Sueldo recalculado y actualizado a: " + sueldoNuevo + "€");
                 } else {
                     System.out.println("Empleado no encontrado.");
                 }
@@ -254,20 +262,24 @@ public class EmpleadoDAO {
              ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
-                Empleado e = new Empleado(
-                        rs.getInt("categoria"),
-                        rs.getInt("anyos"),
-                        rs.getString("nombre"),
-                        rs.getString("dni"),
-                        rs.getString("sexo").charAt(0)
-                );
-                int nuevoSueldo = Nomina.sueldo(e);
+                try {
+                    Empleado e = new Empleado(
+                            rs.getInt("categoria"),
+                            rs.getInt("anyos"),
+                            rs.getString("nombre"),
+                            rs.getString("dni"),
+                            rs.getString("sexo").charAt(0)
+                    );
+                    int nuevoSueldo = Nomina.sueldo(e);
 
-                String sqlUpdate = "UPDATE Nominas SET sueldo = ? WHERE dni = ?";
-                try (PreparedStatement psUp = conn.prepareStatement(sqlUpdate)) {
-                    psUp.setInt(1, nuevoSueldo);
-                    psUp.setString(2, e.dni);
-                    psUp.executeUpdate();
+                    String sqlUpdate = "UPDATE Nominas SET sueldo = ? WHERE dni = ?";
+                    try (PreparedStatement psUp = conn.prepareStatement(sqlUpdate)) {
+                        psUp.setInt(1, nuevoSueldo);
+                        psUp.setString(2, e.dni);
+                        psUp.executeUpdate();
+                    }
+                } catch (DatosNoCorrectosException ex) {
+                    System.out.println("Error en los datos del empleado con DNI " + rs.getString("dni") + ": " + ex.getMessage());
                 }
             }
             System.out.println("Se han recalculado todos los sueldos correctamente.");
@@ -276,8 +288,7 @@ public class EmpleadoDAO {
 
     // 5.6. Realizar copia de seguridad completa de la BD a ficheros
     public void realizarBackupCompleto() throws SQLException {
-        String sql = "SELECT e.categoria, e.anyos, e.nombre, e.dni, e.sexo, n.sueldo " +
-                "FROM Empleados e JOIN Nominas n ON e.dni = n.dni";
+        String sql = "SELECT e.categoria, e.anyos, e.nombre, e.dni, e.sexo FROM Empleados e";
 
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(sql);

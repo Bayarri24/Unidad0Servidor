@@ -4,14 +4,14 @@
  */
 package com.mycompany.Laboral;
 
-import DBUtils.DBUtils; // NUEVO: Import para la gestión de conexión con BD
-import com.mycompany.Laboral.DAO.EmpleadoDAO; // NUEVO: Import para usar la clase DAO
+import DBUtils.DBUtils; // Import para la gestión de conexión con BD
+import com.mycompany.Laboral.DAO.EmpleadoDAO; //Import para usar la clase DAO
 import com.mycompany.Laboral.Exceptions.DatosNoCorrectosException;
 
 import java.io.*;
 import java.sql.Connection;
-import java.sql.SQLException; // NUEVO: Import para capturar excepciones de SQL
-import java.util.Scanner; // NUEVO: Import para leer la entrada por teclado en el menú
+import java.sql.SQLException; // Import para capturar excepciones de SQL
+import java.util.Scanner; //  Import para leer la entrada por teclado en el menú
 
 /**
  *
@@ -23,10 +23,10 @@ public class CalculaNominas {
     Nomina n = new Nomina();
 
     private void escribe(Empleado e1, Empleado e2) {
-        System.out.println("Los datos del primer empleado: ");
+        //System.out.println("Los datos del primer empleado: ");
         e1.imprimeEmpleado();
         System.out.println("Y su sueldo es de " + n.sueldo(e1));
-        System.out.println("Los datos del segundo empleado: ");
+        //System.out.println("Los datos del segundo empleado: ");
         e2.imprimeEmpleado();
         System.out.println("Y su sueldo es de " + n.sueldo(e2));
 
@@ -37,25 +37,29 @@ public class CalculaNominas {
         /**Creacion de objetos**/
         Empleado e1 = new Empleado(4, 7, "James Cosling", "32000032G", 'M');
         Empleado e2 = new Empleado("Ada Lovelace", "32000031R", 'F');
-        CalculaNominas nn = new CalculaNominas();
+        CalculaNominas cn = new CalculaNominas();
         Connection conn = null;
         Scanner sc = new Scanner(System.in);
 
 
         /**Imprimimos mediante escribe**/
-        nn.escribe(e1, e2);
+        cn.escribe(e1, e2);
+
         /**Incremento de los años trabajados y cambio de categoria a 9**/
+        System.out.println("Incrementando años trabajados y cambiando la categoría");
         e2.incrAnyo();
         e1.setCategoria(9);
 
         /**Imprimimos los empleados y su sueldo*/
-        nn.escribe(e1, e2);
+        System.out.println("volvemos a imprimir despues de los cambios");
+        cn.escribe(e1, e2);
 
         //Llamamos a la función y leemos el txt
-        leerTxt("empleados.txt");
+        cn.leerTxt("empleados.txt");
 
         //Actualizamos el txt con un nuevo empleado y lo leemos de nuevo
-        actualizarTxt();
+        System.out.println("Actualizando el fichero empleados.txt");
+        cn.actualizarTxt();
 
 
         // Apertura de la conexión a la base de datos y ejecutar el menú interactivo
@@ -68,10 +72,9 @@ public class CalculaNominas {
 
 
             int opcion = 0;
-
-            //  Menú interactivo
+            //  Menú
             do {
-                System.out.println("MENÚ DE OPCIONES");
+                System.out.println("\nMENÚ DE OPCIONES");
                 System.out.println("1. Mostrar información de todos los empleados");
                 System.out.println("2. Mostrar salario de un empleado por DNI");
                 System.out.println("3. Modificar datos de un empleado");
@@ -84,8 +87,7 @@ public class CalculaNominas {
                 System.out.print("Seleccione una opción: ");
 
                 try {
-                    opcion = sc.nextInt();
-
+                    opcion = Integer.parseInt(sc.nextLine());
                     switch (opcion) {
                         case 1:
                             dao.mostrarEmpleados();
@@ -113,7 +115,7 @@ public class CalculaNominas {
                             dao.altaEmpleado(e1);
                             break;
                         case 8:
-                            System.out.print("Introduce el nombre del fichero (ej. empleadosNuevos.txt): ");
+                            System.out.print("Introduce el nombre del fichero: ");
                             String rutaFichero = sc.nextLine();
                             dao.altaEmpleado(rutaFichero);
                             break;
@@ -134,7 +136,7 @@ public class CalculaNominas {
         } catch (SQLException e) {
             System.out.println("Error al conectar con la base de datos: " + e.getMessage());
         } finally {
-            // Cerramos la conexión de forma segura
+            // Cerramos la conexión
             if (conn != null) {
                 try {
                     DBUtils.close(conn);
@@ -205,7 +207,7 @@ public class CalculaNominas {
     public static void actualizarTxt() {
         try {
             FileWriter fw = new FileWriter("empleados.txt");
-            fw.write("categoría: 4,años trabajados: 9, nombre: James Cosling, dni: 32000032G, sexo:´M´\n");
+            fw.write("4,9,James Cosling,32000032G,M");
             fw.close();  // Se debe cerrar el FileWriter para que los cambios se guarden correctamente
             System.out.println("Documento actualizado");
         } catch (IOException e) {

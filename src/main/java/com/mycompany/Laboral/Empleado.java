@@ -12,13 +12,13 @@ public class Empleado extends Persona {
 
         /**Imponemos la condicion */
         if (categoria < 1 || categoria > 10 || anyosTrabajados < 0) {
-            throw new DatosNoCorrectosException();
+            throw new DatosNoCorrectosException("La categoría tiene que estar entre 1 y 10 y los años trabajados no pueden ser negativos");
         }
         this.categoria = categoria;
         this.anyosTrabajados = anyosTrabajados;
     }
 
-    public Empleado(String nombre, String dni, char sexo)  {
+    public Empleado(String nombre, String dni, char sexo) {
         super(nombre, dni, sexo);
         categoria = 1;
         anyosTrabajados = 0;
@@ -32,8 +32,9 @@ public class Empleado extends Persona {
      * Validamos que la categoria este entre 1 y 10,
      * si no lo esta lanzamos una excepcion
      *
-     * */
-    public void setCategoria(int categoria)  throws DatosNoCorrectosException {
+     *
+     */
+    public void setCategoria(int categoria) throws DatosNoCorrectosException {
         if (categoria < 1 || categoria > 10) {
             throw new DatosNoCorrectosException("La categoría tiene que estar entre 1 y 10");
         }
@@ -45,7 +46,7 @@ public class Empleado extends Persona {
     }
 
     public void imprimeEmpleado() {
-        System.out.println("El empleado " + nombre + " con DNI " + dni
+        System.out.print("El empleado " + nombre + " con DNI " + dni
                 + " y de sexo " + sexo + " es de categoria " + categoria
                 + " y lleva trabajando " + anyosTrabajados
                 + " en la empresa");

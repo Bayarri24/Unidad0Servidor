@@ -1,2 +1,5 @@
-32000032G;James Cosling;M;9;7
-32000031R;Ada Lovelace;F;1;1
+4,9,James Cosling,32000032G,M10,15,Jose Rodriguez,10,M
+8,12,Marta Vázquez,8,F
+5,4,Luis Garrido,5,M
+9,20,Manuel García,9,M
+7,8,Andrea Fernández,7,F

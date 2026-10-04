@@ -1,5 +1,5 @@
-32000033A, Jose Rodriguez, M, 10, 15
-32000034B, Marta Vázquez, F, 8, 12
-32000035C, Luis Garrido, M, 5, 4
-32000036D, Manuel García, M, 9, 20
-32000037E, Andrea Fernández, F, 7, 8
+10,15,Jose Rodriguez,32000033A,M
+8,12,Marta Vázquez,32000034B,F
+5,4,Luis Garrido,32000035C,M
+9,20,Manuel García,32000036D,M
+7,8,Andrea Fernández,32000037E,F
